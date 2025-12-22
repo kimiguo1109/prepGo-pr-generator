@@ -5,12 +5,12 @@ import react from '@vitejs/plugin-react'
 export default defineConfig({
   plugins: [react()],
   server: {
-    port: 18301,
+    port: 28020,
     host: '0.0.0.0',
     cors: true,  // Enable CORS for all origins
     proxy: {
       '/api': {
-        target: 'http://localhost:18300',
+        target: 'http://localhost:28021',
         changeOrigin: true,
         configure: (proxy) => {
           // Handle CORS preflight

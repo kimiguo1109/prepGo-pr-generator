@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # PrepGo Practice Generator Start Script
-# Backend: http://localhost:18300
-# Frontend: http://localhost:18301
+# Frontend: http://localhost:28020
+# Backend: http://localhost:28021
 
 set -e
 
@@ -75,9 +75,9 @@ stop_services() {
         rm -f "$FRONTEND_PID_FILE"
     fi
     
-    # Also kill any processes on our ports (backend: 18300, frontend: 18301)
-    fuser -k 18300/tcp 2>/dev/null || true
-    fuser -k 18301/tcp 2>/dev/null || true
+    # Also kill any processes on our ports (frontend: 28020, backend: 28021)
+    fuser -k 28020/tcp 2>/dev/null || true
+    fuser -k 28021/tcp 2>/dev/null || true
     
     echo -e "${GREEN}Services stopped.${NC}"
 }
@@ -104,16 +104,16 @@ start_backend() {
         echo -e "${YELLOW}Warning: GEMINI_API_KEY not set. Generation will fail without it.${NC}"
     fi
     
-    # Start backend on port 18300
-    nohup uvicorn app.main:app --host 0.0.0.0 --port 18300 --reload > "../$BACKEND_LOG" 2>&1 &
+    # Start backend on port 28021
+    nohup uvicorn app.main:app --host 0.0.0.0 --port 28021 --reload > "../$BACKEND_LOG" 2>&1 &
     local pid=$!
     echo $pid > "../$BACKEND_PID_FILE"
     
     cd ..
     
     echo -e "${GREEN}  Backend started (PID: $pid)${NC}"
-    echo -e "  Backend URL: http://localhost:18300"
-    echo -e "  API Docs: http://localhost:18300/docs"
+    echo -e "  Backend URL: http://localhost:28021"
+    echo -e "  API Docs: http://localhost:28021/docs"
 }
 
 # Function to start frontend
@@ -128,15 +128,15 @@ start_frontend() {
         npm install --silent
     fi
     
-    # Start frontend
-    nohup npm run dev > "../$FRONTEND_LOG" 2>&1 &
+    # Start frontend on port 28020
+    nohup npm run dev -- --host 0.0.0.0 --port 28020 > "../$FRONTEND_LOG" 2>&1 &
     local pid=$!
     echo $pid > "../$FRONTEND_PID_FILE"
     
     cd ..
     
     echo -e "${GREEN}  Frontend started (PID: $pid)${NC}"
-    echo -e "  Frontend URL: http://localhost:18301"
+    echo -e "  Frontend URL: http://localhost:28020"
 }
 
 # Function to show status
@@ -156,9 +156,9 @@ show_status() {
     fi
     
     echo -e "\nURLs:"
-    echo -e "  Backend:  http://localhost:18300"
-    echo -e "  Frontend: http://localhost:18301"
-    echo -e "  API Docs: http://localhost:18300/docs"
+    echo -e "  Frontend: http://localhost:28020"
+    echo -e "  Backend:  http://localhost:28021"
+    echo -e "  API Docs: http://localhost:28021/docs"
 }
 
 # Function to show logs

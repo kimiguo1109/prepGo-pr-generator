@@ -4,9 +4,9 @@
 
 | 服务 | 地址 |
 |------|------|
-| 前端 | http://localhost:18300 |
-| 后端 API | http://localhost:18301 |
-| API 文档 | http://localhost:18301/docs |
+| 前端 | http://localhost:28020 |
+| 后端 API | http://localhost:28021 |
+| API 文档 | http://localhost:28021/docs |
 
 ---
 
@@ -32,7 +32,7 @@
 
 ```bash
 # 数学课程测试（LaTeX 格式）
-curl -X POST http://localhost:18301/api/v1/external/generate \
+curl -X POST http://localhost:28021/api/v1/external/generate \
   -H "Content-Type: application/json" \
   -d '{
     "course_id": "calculus-ab",
@@ -43,7 +43,7 @@ curl -X POST http://localhost:18301/api/v1/external/generate \
   }' | jq '.'
 
 # 物理课程测试（公式 + 单位）
-curl -X POST http://localhost:18301/api/v1/external/generate \
+curl -X POST http://localhost:28021/api/v1/external/generate \
   -H "Content-Type: application/json" \
   -d '{
     "course_id": "physics-1",
@@ -53,7 +53,7 @@ curl -X POST http://localhost:18301/api/v1/external/generate \
   }' | jq '.'
 
 # 历史课程测试（文档分析）
-curl -X POST http://localhost:18301/api/v1/external/generate \
+curl -X POST http://localhost:28021/api/v1/external/generate \
   -H "Content-Type: application/json" \
   -d '{
     "course_id": "us-history",
@@ -233,7 +233,7 @@ curl -X POST http://localhost:18301/api/v1/external/generate \
 **GET** `/api/v1/external/courses`
 
 ```bash
-curl http://localhost:18301/api/v1/external/courses | jq '.data.categories'
+curl http://localhost:28021/api/v1/external/courses | jq '.data.categories'
 ```
 
 ### 3. 获取课程 Units
@@ -241,7 +241,7 @@ curl http://localhost:18301/api/v1/external/courses | jq '.data.categories'
 **GET** `/api/v1/external/courses/{course_id}/units`
 
 ```bash
-curl http://localhost:18301/api/v1/external/courses/calculus-ab/units | jq '.'
+curl http://localhost:28021/api/v1/external/courses/calculus-ab/units | jq '.'
 ```
 
 ### 4. 队列状态
@@ -249,7 +249,7 @@ curl http://localhost:18301/api/v1/external/courses/calculus-ab/units | jq '.'
 **GET** `/api/v1/external/queue-status`
 
 ```bash
-curl http://localhost:18301/api/v1/external/queue-status | jq '.'
+curl http://localhost:28021/api/v1/external/queue-status | jq '.'
 ```
 
 ---

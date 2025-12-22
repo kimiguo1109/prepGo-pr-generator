@@ -22,58 +22,65 @@ class Settings(BaseSettings):
     aws_region: str = "us-east-1"
     s3_bucket_name: Optional[str] = None
     
-    # Course file mapping: course_id -> file path
+    # S3 Course Data URL (public access)
+    s3_course_data_url: str = "https://prepgo-assert.s3.us-west-2.amazonaws.com/studyguide_rephrased"
+    
+    # Course file mapping: course_id -> S3 file path (exact filename for S3)
     # Organized by category with standard URL-based course IDs
+    # Updated 2024-12-22 with correct S3 filenames
     course_file_mapping: dict = {
         # Math
-        "precalculus": "stem-math/precalculus_complete_*.json",
-        "calculus-ab": "stem-math/calculus-ab_complete_*.json",
-        "calculus-bc": "stem-math/calculus-bc_complete_*.json",
-        "statistics": "stem-math/statistics_complete_*.json",
+        "precalculus": "stem-math/precalculus_complete_2025-11-10T01-40-31.json",
+        "calculus-ab": "stem-math/calculus-ab_complete_2025-11-10T01-42-05.json",
+        "calculus-bc": "stem-math/calculus-bc_complete_2025-11-10T01-48-17.json",
+        "statistics": "stem-math/statistics_complete_2025-11-10T01-42-36.json",
         
         # Computer Science
-        "computer-science-a": "compsci/computer-science-a_complete_*.json",
-        "computer-science-principles": "compsci/computer-science-principles_complete_*.json",
+        "computer-science-a": "compsci/computer-science-a_complete_2025-11-08T19-48-14.json",
+        "computer-science-principles": "compsci/computer-science-principles_complete_2025-11-08T19-37-59.json",
         
         # Science
-        "biology": "stem-science/biology_complete_*.json",
-        "chemistry": "stem-science/chemistry_complete_*.json",
-        "environmental-science": "stem-science/us-environment_complete_*.json",
-        "physics-1": "stem-science/physics-1_complete_*.json",
-        "physics-2": "stem-science/physics-2_complete_*.json",
-        "physics-c-electricity-and-magnetism": "stem-science/physics-c-electricity_complete_*.json",
-        "physics-c-mechanics": "stem-science/physics-c-mechanics_complete_*.json",
+        "biology": "stem-science/biology_complete_2025-11-07T08-22-40.json",
+        "chemistry": "stem-science/chemistry_complete_2025-11-07T03-53-09.json",
+        "environmental-science": "stem-science/us-environment_complete_2025-11-07T03-54-07.json",
+        "physics-1": "stem-science/physics-1_complete_2025-11-07T08-43-45.json",
+        "physics-2": "stem-science/physics-2_complete_2025-11-07T08-45-19.json",
+        "physics-c-electricity-and-magnetism": "stem-science/physics-c-electricity_complete_2025-11-07T08-42-44.json",
+        "physics-c-mechanics": "stem-science/physics-c-mechanics_complete_2025-11-07T08-44-17.json",
         
         # History
-        "us-history": "socsci-history/us-history_complete_*.json",
-        "world-history-modern": "socsci-history/modernworldhistory_complete_*.json",
-        "european-history": "socsci-history/european-history_complete_*.json",
+        "us-history": "socsci-history/us-history_complete_2025-11-07T03-00-37.json",
+        "world-history-modern": "socsci-history/modernworldhistory_complete_2025-11-07T02-55-44.json",
+        "european-history": "socsci-history/european-history_complete_2025-11-07T02-59-27.json",
+        "african-american-studies": "socsci-history/african-american-studies_complete_2025-11-07T07-01-26.json",
         
-        # Social Science
-        "macroeconomics": "socsci-economics/macroeconomics_complete_*.json",
-        "microeconomics": "socsci-economics/microeconomics_complete_*.json",
-        "us-government-and-politics": "socsci-other/us-gov-&-politics_complete_*.json",
-        "comparative-government-and-politics": "socsci-other/comparative-government_complete_*.json",
-        "psychology": "socsci-other/psychology_complete_*.json",
-        "human-geography": "socsci-other/humangeo_complete_*.json",
+        # Social Science - Economics
+        "macroeconomics": "socsci-economics/macroeconomics_complete_2025-11-07T03-25-30.json",
+        "microeconomics": "socsci-economics/microeconomics_complete_2025-11-07T03-13-20.json",
+        
+        # Social Science - Other
+        "us-government-and-politics": "socsci-other/us-gov-%26-politics_complete_2025-11-07T03-15-48.json",
+        "comparative-government-and-politics": "socsci-other/comparative-government_complete_2025-11-07T06-33-00.json",
+        "psychology": "socsci-other/psychology_complete_2025-11-07T02-52-42.json",
+        "human-geography": "socsci-other/humangeo_complete_2025-11-07T03-16-14.json",
         
         # Languages
-        "spanish-language-and-culture": "worldlanguage/spanish_complete_*.json",
-        "spanish-literature-and-culture": "worldlanguage/spanish-literature_complete_*.json",
-        "latin": "worldlanguage/latin_complete_*.json",
-        "chinese-language-and-culture": "worldlanguage/chinese_complete_*.json",
-        "french-language-and-culture": "worldlanguage/french_complete_*.json",
-        "german-language-and-culture": "worldlanguage/german_complete_*.json",
-        "italian-language-and-culture": "worldlanguage/italian_complete_*.json",
-        "japanese-language-and-culture": "worldlanguage/japanese_complete_*.json",
+        "spanish-language-and-culture": "worldlanguage/spanish_complete_2025-11-12T08-26-28.json",
+        "spanish-literature-and-culture": "worldlanguage/spanish-literature_complete_2025-11-12T08-28-04.json",
+        "latin": "worldlanguage/latin_complete_2025-11-12T08-25-13.json",
+        "chinese-language-and-culture": "worldlanguage/chinese_complete_2025-11-12T08-05-36.json",
+        "french-language-and-culture": "worldlanguage/french_complete_2025-11-12T08-08-40.json",
+        "german-language-and-culture": "worldlanguage/german_complete_2025-11-12T08-15-43.json",
+        "italian-language-and-culture": "worldlanguage/italian_complete_2025-11-12T08-18-15.json",
+        "japanese-language-and-culture": "worldlanguage/japanese_complete_2025-11-12T08-27-20.json",
         
         # English
-        "english-language-and-composition": "lang-comp/english-language_complete_*.json",
-        "english-literature-and-composition": "lang-comp/english-literature_complete_*.json",
+        "english-language-and-composition": "lang-comp/english-language_complete_2025-11-10T05-56-03.json",
+        "english-literature-and-composition": "lang-comp/english-literature_complete_2025-11-10T05-56-29.json",
         
         # Arts
-        "art-history": "arts/art-history_complete_*.json",
-        "music-theory": "arts/music-thoery_complete_*.json",
+        "art-history": "arts/art-history_complete_2025-11-07T09-09-27.json",
+        "music-theory": "arts/music-thoery_complete_2025-11-07T09-10-40.json",
     }
     
     # Course categories for organization
@@ -99,6 +106,7 @@ class Settings(BaseSettings):
             {"name": "AP U.S. History", "id": "us-history"},
             {"name": "AP World History: Modern", "id": "world-history-modern"},
             {"name": "AP European History", "id": "european-history"},
+            {"name": "AP African American Studies", "id": "african-american-studies"},
         ],
         "social_science": [
             {"name": "AP Macroeconomics", "id": "macroeconomics"},
@@ -153,6 +161,7 @@ class Settings(BaseSettings):
         "us-history": "history",
         "world-history-modern": "history",
         "european-history": "history",
+        "african-american-studies": "history",
         
         # Economics - graphs and models
         "macroeconomics": "economics",
