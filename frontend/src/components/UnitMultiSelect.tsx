@@ -34,7 +34,6 @@ export function UnitMultiSelect({
   };
 
   const allSelected = units.length > 0 && selectedUnits.length === units.length;
-  const someSelected = selectedUnits.length > 0 && selectedUnits.length < units.length;
 
   return (
     <div className="unit-multi-select">

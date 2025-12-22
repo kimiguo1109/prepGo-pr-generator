@@ -47,6 +47,10 @@ app.add_middleware(
     allow_origins=[
         "https://react.prepgo.com",
         "http://react.prepgo.com",
+        "https://pr-generator.prepgo.com",
+        "http://pr-generator.prepgo.com",
+        "http://44.236.240.72:28020",
+        "http://44.236.240.72:28021",
         "http://localhost:3000",
         "http://localhost:5173",
         "http://127.0.0.1:3000",

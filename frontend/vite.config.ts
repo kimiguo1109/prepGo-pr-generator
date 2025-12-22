@@ -10,7 +10,7 @@ export default defineConfig({
     cors: true,  // Enable CORS for all origins
     proxy: {
       '/api': {
-        target: 'http://localhost:28021',
+        target: 'http://44.236.240.72:28021',
         changeOrigin: true,
         configure: (proxy) => {
           // Handle CORS preflight

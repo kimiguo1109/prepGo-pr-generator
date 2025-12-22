@@ -2,11 +2,22 @@
 
 ## 服务信息
 
+### 外部访问（通过 CloudFront）
+
 | 服务 | 地址 |
 |------|------|
-| 前端 | http://localhost:28020 |
-| 后端 API | http://localhost:28021 |
-| API 文档 | http://localhost:28021/docs |
+| 前端 | https://pr-generator.prepgo.com |
+| 后端 API | https://pr-generator.prepgo.com/api/v1 |
+| API 文档 | https://pr-generator.prepgo.com/docs |
+
+### 内网访问（同服务器 44.236.240.72）
+
+| 服务 | 地址 |
+|------|------|
+| 前端页面调用 API | `/api/v1` (相对路径，nginx 代理) |
+| 后端直连 | http://127.0.0.1:28021/api/v1 |
+
+> **前端对接说明**: 前端代码使用相对路径 `/api/v1/...` 调用 API，nginx 会自动代理到后端 28021 端口。
 
 ---
 
@@ -32,7 +43,7 @@
 
 ```bash
 # 数学课程测试（LaTeX 格式）
-curl -X POST http://localhost:28021/api/v1/external/generate \
+curl -X POST https://pr-generator.prepgo.com/api/v1/external/generate \
   -H "Content-Type: application/json" \
   -d '{
     "course_id": "calculus-ab",
@@ -43,7 +54,7 @@ curl -X POST http://localhost:28021/api/v1/external/generate \
   }' | jq '.'
 
 # 物理课程测试（公式 + 单位）
-curl -X POST http://localhost:28021/api/v1/external/generate \
+curl -X POST https://pr-generator.prepgo.com/api/v1/external/generate \
   -H "Content-Type: application/json" \
   -d '{
     "course_id": "physics-1",
@@ -53,7 +64,7 @@ curl -X POST http://localhost:28021/api/v1/external/generate \
   }' | jq '.'
 
 # 历史课程测试（文档分析）
-curl -X POST http://localhost:28021/api/v1/external/generate \
+curl -X POST https://pr-generator.prepgo.com/api/v1/external/generate \
   -H "Content-Type: application/json" \
   -d '{
     "course_id": "us-history",
@@ -233,7 +244,7 @@ curl -X POST http://localhost:28021/api/v1/external/generate \
 **GET** `/api/v1/external/courses`
 
 ```bash
-curl http://localhost:28021/api/v1/external/courses | jq '.data.categories'
+curl https://pr-generator.prepgo.com/api/v1/external/courses | jq '.data.categories'
 ```
 
 ### 3. 获取课程 Units
@@ -241,7 +252,7 @@ curl http://localhost:28021/api/v1/external/courses | jq '.data.categories'
 **GET** `/api/v1/external/courses/{course_id}/units`
 
 ```bash
-curl http://localhost:28021/api/v1/external/courses/calculus-ab/units | jq '.'
+curl https://pr-generator.prepgo.com/api/v1/external/courses/calculus-ab/units | jq '.'
 ```
 
 ### 4. 队列状态
@@ -249,7 +260,7 @@ curl http://localhost:28021/api/v1/external/courses/calculus-ab/units | jq '.'
 **GET** `/api/v1/external/queue-status`
 
 ```bash
-curl http://localhost:28021/api/v1/external/queue-status | jq '.'
+curl https://pr-generator.prepgo.com/api/v1/external/queue-status | jq '.'
 ```
 
 ---

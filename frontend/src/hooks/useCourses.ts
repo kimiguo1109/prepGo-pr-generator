@@ -41,10 +41,10 @@ export function useUnits(courseId: string | null) {
       return;
     }
 
-    async function load() {
+    async function load(id: string) {
       try {
         setLoading(true);
-        const response = await fetchUnits(courseId);
+        const response = await fetchUnits(id);
         setUnits(response.units);
         setCourseName(response.course_name);
         setError(null);
@@ -55,7 +55,7 @@ export function useUnits(courseId: string | null) {
         setLoading(false);
       }
     }
-    load();
+    load(courseId);
   }, [courseId]);
 
   return { units, courseName, loading, error };

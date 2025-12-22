@@ -1,8 +1,8 @@
 #!/bin/bash
 
 # PrepGo Practice Generator Start Script
-# Frontend: http://localhost:28020
-# Backend: http://localhost:28021
+# Frontend: http://44.236.240.72:28020 or http://pr-generator.prepgo.com
+# Backend: http://44.236.240.72:28021
 
 set -e
 
@@ -112,8 +112,8 @@ start_backend() {
     cd ..
     
     echo -e "${GREEN}  Backend started (PID: $pid)${NC}"
-    echo -e "  Backend URL: http://localhost:28021"
-    echo -e "  API Docs: http://localhost:28021/docs"
+    echo -e "  Backend URL: http://44.236.240.72:28021"
+    echo -e "  API Docs: http://44.236.240.72:28021/docs"
 }
 
 # Function to start frontend
@@ -136,7 +136,7 @@ start_frontend() {
     cd ..
     
     echo -e "${GREEN}  Frontend started (PID: $pid)${NC}"
-    echo -e "  Frontend URL: http://localhost:28020"
+    echo -e "  Frontend URL: http://pr-generator.prepgo.com"
 }
 
 # Function to show status
@@ -156,9 +156,9 @@ show_status() {
     fi
     
     echo -e "\nURLs:"
-    echo -e "  Frontend: http://localhost:28020"
-    echo -e "  Backend:  http://localhost:28021"
-    echo -e "  API Docs: http://localhost:28021/docs"
+    echo -e "  Frontend: http://pr-generator.prepgo.com"
+    echo -e "  Backend:  http://44.236.240.72:28021"
+    echo -e "  API Docs: http://pr-generator.prepgo.com/docs"
 }
 
 # Function to show logs
