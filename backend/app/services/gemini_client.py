@@ -142,6 +142,21 @@ class GeminiClient:
                     )
                     
                     result = response.text or ""
+                    
+                    # Check finish reason to detect truncation
+                    finish_reason = None
+                    if response.candidates and len(response.candidates) > 0:
+                        candidate = response.candidates[0]
+                        finish_reason = getattr(candidate, 'finish_reason', None)
+                        logger.info(f"Generation finish_reason: {finish_reason}")
+                        
+                        # Check for truncation (MAX_TOKENS or LENGTH)
+                        if finish_reason and str(finish_reason).upper() in ['MAX_TOKENS', 'LENGTH', '2']:
+                            logger.warning(f"Response was truncated (finish_reason={finish_reason}), retrying with smaller prompt context...")
+                            if attempt < cls._max_retries - 1:
+                                await asyncio.sleep(cls._retry_delay)
+                                continue
+                    
                     logger.info(f"Completed non-streaming generation ({len(result)} chars)")
                     return result
                     

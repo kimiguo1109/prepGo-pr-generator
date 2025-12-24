@@ -23,11 +23,113 @@
 
 ## External API 端点
 
-### 1. 生成练习题（JSON 格式）
+### 1. 异步生成练习题（推荐）⭐
+
+由于生成需要 30-90 秒，**推荐使用异步 API** 避免超时问题。
+
+#### Step 1: 创建异步任务
+
+**POST** `/api/v1/external/async`
+
+```bash
+curl -X POST https://pr-generator.prepgo.com/api/v1/external/async \
+  -H "Content-Type: application/json" \
+  -d '{
+    "course_id": "biology",
+    "unit_numbers": [1],
+    "mcq_count": 15,
+    "frq_count": 2,
+    "difficulty": "ap_level"
+  }'
+```
+
+**响应**:
+```json
+{
+  "success": true,
+  "task_id": "1bc05982-2265-441e-af26-3d37fd7f594a"
+}
+```
+
+#### Step 2: 轮询任务状态
+
+**GET** `/api/v1/external/task/{task_id}`
+
+```bash
+curl https://pr-generator.prepgo.com/api/v1/external/task/1bc05982-2265-441e-af26-3d37fd7f594a
+```
+
+**任务进行中**:
+```json
+{
+  "success": true,
+  "task_id": "1bc05982-2265-441e-af26-3d37fd7f594a",
+  "status": "processing",
+  "progress": "Generating with AI...",
+  "data": null
+}
+```
+
+**任务完成**:
+```json
+{
+  "success": true,
+  "task_id": "1bc05982-2265-441e-af26-3d37fd7f594a",
+  "status": "completed",
+  "progress": "Complete",
+  "data": {
+    "course_id": "biology",
+    "course_name": "AP Biology",
+    "content": { ... }
+  }
+}
+```
+
+#### 任务状态值
+
+| status | 说明 |
+|--------|------|
+| pending | 等待开始 |
+| processing | 正在生成 |
+| completed | 完成（data 中有结果）|
+| failed | 失败（error 中有原因）|
+
+#### 前端轮询示例
+
+```javascript
+async function generatePractice(params) {
+  // 1. 创建任务
+  const { task_id } = await fetch('/api/v1/external/async', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(params)
+  }).then(r => r.json());
+  
+  // 2. 轮询状态（每 3 秒）
+  while (true) {
+    const result = await fetch(`/api/v1/external/task/${task_id}`).then(r => r.json());
+    
+    if (result.status === 'completed') {
+      return result.data;
+    }
+    if (result.status === 'failed') {
+      throw new Error(result.error);
+    }
+    
+    await new Promise(r => setTimeout(r, 3000)); // 等待 3 秒
+  }
+}
+```
+
+---
+
+### 2. 同步生成练习题（可能超时）
 
 **POST** `/api/v1/external/generate`
 
 生成练习题并返回 **结构化 JSON 数据**，包含科目特定格式（数学 LaTeX、化学公式等）。
+
+> ⚠️ **注意**: 此接口可能因 CloudFront 超时而失败，推荐使用上方异步 API。
 
 #### 请求参数
 
@@ -237,9 +339,133 @@ curl -X POST https://pr-generator.prepgo.com/api/v1/external/generate \
 
 ---
 
+## 异步生成 API（推荐）
+
+由于练习题生成可能需要 30-90 秒，超过某些代理的超时限制，推荐使用异步 API：
+
+### 1. 提交异步生成任务
+
+**POST** `/api/v1/external/async`
+
+立即返回 task_id，不等待生成完成。
+
+```bash
+curl -X POST https://pr-generator.prepgo.com/api/v1/external/async \
+  -H "Content-Type: application/json" \
+  -d '{
+    "course_id": "biology",
+    "unit_numbers": [1],
+    "mcq_count": 5,
+    "frq_count": 1
+  }'
+```
+
+**响应（立即返回）：**
+```json
+{
+  "success": true,
+  "task_id": "c721280a-d59e-475f-a63e-a298a3338d40"
+}
+```
+
+### 2. 轮询任务状态
+
+**GET** `/api/v1/external/task/{task_id}`
+
+```bash
+curl https://pr-generator.prepgo.com/api/v1/external/task/c721280a-d59e-475f-a63e-a298a3338d40
+```
+
+**状态值：**
+| status | 说明 |
+|--------|------|
+| pending | 任务已创建，等待开始 |
+| processing | 正在生成中 |
+| completed | 生成完成，data 字段包含结果 |
+| failed | 生成失败，error 字段包含错误信息 |
+
+**处理中响应：**
+```json
+{
+  "success": true,
+  "task_id": "c721280a-d59e-475f-a63e-a298a3338d40",
+  "status": "processing",
+  "progress": "Generating with AI...",
+  "data": null
+}
+```
+
+**完成响应：**
+```json
+{
+  "success": true,
+  "task_id": "c721280a-d59e-475f-a63e-a298a3338d40",
+  "status": "completed",
+  "progress": "Complete",
+  "data": {
+    "course_id": "biology",
+    "content": { ... },
+    "generated_at": "2025-12-24T..."
+  }
+}
+```
+
+### 3. 删除任务（可选）
+
+**DELETE** `/api/v1/external/task/{task_id}`
+
+清理已完成的任务。
+
+### 前端调用示例
+
+```typescript
+async function generatePractice(request: GenerateRequest) {
+  // 1. 提交任务
+  const submitRes = await fetch('/api/v1/external/async', {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(request)
+  });
+  const { task_id } = await submitRes.json();
+  
+  // 2. 轮询状态（每 2 秒）
+  while (true) {
+    const statusRes = await fetch(`/api/v1/external/task/${task_id}`);
+    const status = await statusRes.json();
+    
+    console.log('Progress:', status.progress);
+    
+    if (status.status === 'completed') {
+      return status.data;
+    }
+    if (status.status === 'failed') {
+      throw new Error(status.error);
+    }
+    
+    await new Promise(r => setTimeout(r, 2000));
+  }
+}
+```
+
+---
+
+## 同步生成 API
+
+> ⚠️ **注意**：同步 API 可能因代理超时（60秒）导致 504 错误。推荐使用上方的异步 API。
+
+### 生成练习题（JSON 格式）
+
+**POST** `/api/v1/external/generate`
+
+生成练习题并返回 **结构化 JSON 数据**，包含科目特定格式（数学 LaTeX、化学公式等）。
+
+（参数与异步 API 相同）
+
+---
+
 ## 其他 API 端点
 
-### 2. 获取课程列表（按分类）
+### 获取课程列表（按分类）
 
 **GET** `/api/v1/external/courses`
 
