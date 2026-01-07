@@ -45,6 +45,10 @@ app = FastAPI(
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
+        "https://prepgo.com",
+        "http://prepgo.com",
+        "https://www.prepgo.com",
+        "http://www.prepgo.com",
         "https://react.prepgo.com",
         "http://react.prepgo.com",
         "https://pr-generator.prepgo.com",
